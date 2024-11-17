@@ -28,6 +28,13 @@ led.value = True
 looping = False
 loop_pos = 0
 
+def press_combination(*keys):
+    for key in keys:
+        kb.press(key)
+    for key in keys:
+        kb.release(key)
+
+
 def execute_command(function, command):
     if function == "DELAY":
         if command.isdigit():
@@ -78,6 +85,29 @@ def execute_command(function, command):
                     cc.send(ConsumerControlCode.VOLUME_DECREMENT)
         elif command == "mute":
             cc.send(ConsumerControlCode.MUTE)
+        elif function == "FILE":
+            press_combination(Keycode.WINDOWS, Keycode.R)
+            time.sleep(1)
+            layout.write("cmd.exe")
+            press_combination(Keycode.ENTER)
+            time.sleep(2)
+            layout.write(f"notepad {command}")
+            press_combination(Keycode.ENTER)
+            time.sleep(1)
+            press_combination(Keycode.ENTER)
+            time.sleep(1)
+            file = "/payload.txt"
+            with open(file, "r") as file:
+                time.sleep(1)
+                for line in file:
+                    stripped_line = line.strip()
+                    print(stripped_line)
+                    layout.write(stripped_line)
+                    press_combination(Keycode.ENTER)
+            time.sleep(1)
+            press_combination(Keycode.CONTROL, Keycode.S)
+            time.sleep(2)
+            press_combination(Keycode.ALT, Keycode.F4)
     
 
 def get_substr(string, start, end):
