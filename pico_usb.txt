@@ -19,10 +19,13 @@
 ###  volume(x) - negative number is volume down by x, positive volume up by x.     ###
 ###              min volume = 0. max = 100. volume(mute) mutes the speakers.       ###
 ###  loop() - forever loops everything after the loop command. Use loop only once. ###
+###  file(path) - create a file with the content of payload.txt.                   ###
 ######################################################################################
 
 delay(1)
 press(windows + d) # minimizes all windows
+delay(1)
+file(C:\temp\example.txt)
 delay(1)
 press(windows + r)
 delay(1)
