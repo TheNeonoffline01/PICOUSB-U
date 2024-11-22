@@ -33,7 +33,13 @@ def press_combination(*keys):
         kb.press(key)
     for key in keys:
         kb.release(key)
-
+        
+def runcmd():
+    press_combination(Keycode.WINDOWS, Keycode.R)
+    time.sleep(0.1)
+    layout.write("cmd.exe")
+    press_combination(Keycode.ENTER)
+    time.sleep(1.5)
 
 def execute_command(function, command):
     if function == "DELAY":
@@ -85,30 +91,30 @@ def execute_command(function, command):
                     cc.send(ConsumerControlCode.VOLUME_DECREMENT)
         elif command == "mute":
             cc.send(ConsumerControlCode.MUTE)
-        elif function == "FILE":
-            press_combination(Keycode.WINDOWS, Keycode.R)
+    elif function == "FILE":
+        runcmd()
+        layout.write("MD C:\Temp")
+        press_combination(Keycode.ENTER)       
+        time.sleep(2)
+        layout.write(f"notepad {command}")
+        press_combination(Keycode.ENTER)
+        time.sleep(1)
+        press_combination(Keycode.ENTER)
+        time.sleep(1)
+        file = "/payload.txt"
+        with open(file, "r") as file:
             time.sleep(1)
-            layout.write("cmd.exe")
-            press_combination(Keycode.ENTER)
-            time.sleep(2)
-            layout.write(f"notepad {command}")
-            press_combination(Keycode.ENTER)
-            time.sleep(1)
-            press_combination(Keycode.ENTER)
-            time.sleep(1)
-            file = "/payload.txt"
-            with open(file, "r") as file:
-                time.sleep(1)
-                for line in file:
-                    stripped_line = line.strip()
-                    print(stripped_line)
-                    layout.write(stripped_line)
-                    press_combination(Keycode.ENTER)
-            time.sleep(1)
-            press_combination(Keycode.CONTROL, Keycode.S)
-            time.sleep(2)
-            press_combination(Keycode.ALT, Keycode.F4)
-        elif function == "CLEANUP":
+            for line in file:
+                stripped_line = line.strip()
+                print(stripped_line)
+                layout.write(stripped_line)
+                press_combination(Keycode.ENTER)
+        time.sleep(1)
+        press_combination(Keycode.CONTROL, Keycode.S)
+        time.sleep(2)
+        press_combination(Keycode.ALT, Keycode.F4)
+        time.sleep(1)
+    elif function == "CLEANUP":
         press_combination(Keycode.WINDOWS, Keycode.R)
         time.sleep(1)
         layout.write("taskkill /F /IM cmd.exe")
@@ -211,7 +217,7 @@ try:
         layout = KeyboardLayout(kb)
     elif command == "SG":
         from keyboard_layouts.keyboard_layout_win_sg import KeyboardLayout
-        layout = KeyboardLayout(sg)
+        layout = KeyboardLayout(kb)
     file = io.open("/pico_usb.txt", "r")
     line = file.readline()
     while line != "":
@@ -239,3 +245,6 @@ try:
 except OSError as e:
     print(e)
 kb.release_all()
+
+
+
