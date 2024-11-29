@@ -96,7 +96,8 @@ def execute_command(function, command):
         layout.write("MD C:\Temp")
         press_combination(Keycode.ENTER)       
         time.sleep(2)
-        layout.write(f"notepad {command}")
+        com = command if command.strip() else r"C:\Temp\test.txt"
+        layout.write(f"notepad {com}")
         press_combination(Keycode.ENTER)
         time.sleep(1)
         press_combination(Keycode.ENTER)
@@ -119,10 +120,13 @@ def execute_command(function, command):
         time.sleep(1)
         layout.write("taskkill /F /IM cmd.exe")
         time.sleep(1)
+        press_combination(Keycode.ENTER)
+        time.sleep(1)
         press_combination(Keycode.WINDOWS, Keycode.R)
         time.sleep(1)
         layout.write("taskkill /F /IM notepad.exe")
         press_combination(Keycode.ENTER)
+        led.value = True
     elif function == "SHORTCUT":
         paths, pathc = command.split('+', 1)
         runcmd()
@@ -168,6 +172,8 @@ def get_substr(string, start, end):
     for idx in range(start+1, end):
             command += string[idx]
     return command
+
+led.value = False
 
 try:
     file = io.open("/layout.txt", "r")
